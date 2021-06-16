@@ -7,21 +7,29 @@ from email import encoders
 ## 'Less secure app access' has to be turned on on your GMAIL account
 
 ## Sender and Recipient emails
-fromaddr = "sbaloyi@student.wethinkcode.co.za"
-toaddr = "sambaloyi2017@gmail.com"
+
+print("\t\tLOGIN")
+fromaddr = input("Enter your email: ")
+passwd = input("Enter your password: (password will not be saved): ")
+toaddr = input("Enter recipient email: ")
+subject = input("Enter subject of email: ")
 
 msg = MIMEMultipart()
 
 #basic message headers
 msg['From'] = fromaddr
 msg['To'] = toaddr
-msg['Subject'] = "Python Email"
+msg['Subject'] = subject
 
 #body of the email to the MIME message
-body = "The very first python email body"
+body = input("Enter body of email: ")
 msg.attach(MIMEText(body, 'plain'))
-filename = "NAME OF THE FILE WITH ITS EXTENSION"
-attachment = open("C:/sandbox/send-email-python/picture.jpg", "rb")
+attachment = input("Enter path of file you wish to attach.\n(Press Enter if you" 
++ " wish to send email without attachment)")
+if len(attachment) > 0:
+	attachment = open(attachment, "rb")
+
+filename = attachment.split("/")[-1]
 
 part = MIMEBase('application', 'octet-stream')
 part.set_payload((attachment).read())
@@ -33,7 +41,7 @@ msg.attach(part)
 # log in to the server
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
-server.login(fromaddr, "PasswordGoesHere(that's not my password FYI)")
+server.login(fromaddr, passwd)
 text = msg.as_string()
 server.sendmail(fromaddr, toaddr, text)
 server.quit()
